@@ -11,7 +11,7 @@ import throttle from 'lodash/throttle'
 import { action, computed, observable, runInAction, toJS } from 'mobx'
 import React, { createRef } from 'react'
 import { HEADER_HEIGHT, TOP_PADDING } from './constants'
-import { GanttProps as GanttProperties, GanttLocale, defaultLocale } from './Gantt'
+import { defaultLocale, GanttLocale, GanttProps as GanttProperties } from './Gantt'
 import { Gantt } from './types'
 import { flattenDeep, transverseData } from './utils'
 
@@ -87,7 +87,7 @@ class GanttStore {
     this.locale = locale
   }
 
-  locale = {...defaultLocale}
+  locale = { ...defaultLocale }
 
   _wheelTimer: number | undefined
 
@@ -249,7 +249,17 @@ class GanttStore {
     }
   }
   @action
-  setTranslateX(translateX: number) {
+  setTranslateX(translateX: number, isLeft?: boolean) {
+    const minorList = this.getMinorList()
+    const [uiStart, uiEnd] = [dayjs(minorList.at(0).key), dayjs(minorList.at(-1).key)]
+    const [dataStart, dataEnd] = [dayjs(this.data.at(0).startDate), dayjs(this.data.at(-1).endDate)]
+    if (
+      isLeft !== undefined &&
+      ((isLeft && uiStart.isBefore(dataStart.subtract(10, 'days'))) ||
+        (!isLeft && uiEnd.isAfter(dataEnd.add(10, 'days'))))
+    ) {
+      return
+    }
     this.translateX = Math.max(translateX, 0)
   }
   @action switchSight(type: Gantt.Sight) {
@@ -504,12 +514,7 @@ class GanttStore {
     }
     const getMinorKey = (date: Dayjs) => {
       if (this.sightConfig.type === 'halfYear')
-        return (
-          date.format(format) +
-          (fstHalfYear.has(date.month())
-            ? this.locale.firstHalf
-            : this.locale.secondHalf)
-        )
+        return date.format(format) + (fstHalfYear.has(date.month()) ? this.locale.firstHalf : this.locale.secondHalf)
 
       return date.format(format)
     }
@@ -622,7 +627,7 @@ class GanttStore {
 
     if (type === 'left') translateX = this.translateX - diffX
 
-    this.setTranslateX(translateX)
+    this.setTranslateX(translateX, type === 'left')
   }
 
   @computed get getBarList(): Gantt.Bar[] {
@@ -705,7 +710,7 @@ class GanttStore {
     // 水平滚动
     if (Math.abs(event.deltaX) > 0) {
       this.scrolling = true
-      this.setTranslateX(this.translateX + event.deltaX)
+      this.setTranslateX(this.translateX + event.deltaX, event.deltaX < 0)
     }
     this._wheelTimer = window.setTimeout(() => {
       this.scrolling = false

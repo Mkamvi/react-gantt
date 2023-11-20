@@ -14,6 +14,7 @@ const TimeAxis: React.FC = () => {
   const minorList = store.getMinorList()
   const handleResize = useCallback(
     ({ x }) => {
+      return
       store.handlePanMove(-x)
     },
     [store]

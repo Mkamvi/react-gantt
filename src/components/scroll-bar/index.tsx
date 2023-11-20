@@ -18,7 +18,10 @@ const ScrollBar: React.FC = () => {
   const handleMouseMove = usePersistFn((event: MouseEvent) => {
     const distance = event.clientX - positionRef.current.left
     // TODO 调整倍率
-    store.setTranslateX(distance * (store.viewWidth / store.scrollBarWidth) + positionRef.current.translateX)
+    store.setTranslateX(
+      distance * (store.viewWidth / store.scrollBarWidth) + positionRef.current.translateX,
+      distance < 0
+    )
   })
 
   const handleMouseUp = useCallback(() => {
