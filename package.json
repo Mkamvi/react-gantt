@@ -1,5 +1,5 @@
 {
-  "name": "rc-gantt",
+  "name": "@hxzn/rc-gantt",
   "version": "0.3.1",
   "homepage": "https://ahwgs.github.io/react-gantt/#/",
   "repository": {
@@ -21,10 +21,7 @@
     "start:website": "dumi dev"
   },
   "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged",
-      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
-    }
+    "hooks": {}
   },
   "lint-staged": {
     "*.{js,json,md,tsx,ts}": [
@@ -90,5 +87,8 @@
   },
   "engines": {
     "node": ">=10"
+  },
+  "publishConfig": {
+    "registry": "http://nexus.hxzn.choerodon.io/repository/hzero-npm/"
   }
 }
