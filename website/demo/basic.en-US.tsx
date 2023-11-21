@@ -1,5 +1,5 @@
 import dayjs from 'dayjs'
-import RcGantt, { enUS } from 'rc-gantt'
+import RcGantt, { enUS } from '@hxzn/rc-gantt'
 import React, { useState } from 'react'
 
 interface Data {

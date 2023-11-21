@@ -1,7 +1,7 @@
 import { GanttLocale } from "../Gantt";
 
 export const zhCN: GanttLocale = Object.freeze({
-  today: "今天",
+  today: "项目开始",
   day: "日视图",
   days: "天数",
   week: "周视图",

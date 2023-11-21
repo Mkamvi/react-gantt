@@ -1,6 +1,6 @@
 {
   "name": "@hxzn/rc-gantt",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "homepage": "https://ahwgs.github.io/react-gantt/#/",
   "repository": {
     "type": "git",
@@ -9,6 +9,7 @@
   "license": "MIT",
   "author": "ahwgs <ah_wgs@126.com>",
   "module": "dist/index.esm.js",
+  "main": "dist/index.esm.js",
   "typings": "dist/types/index.d.ts",
   "files": [
     "dist"
@@ -18,7 +19,7 @@
     "build:website": "dumi build",
     "release": "bumpp package.json --commit --push --tag",
     "start": "cross-env NODE_ENV=development avenger build --watch",
-    "start:website": "dumi dev"
+    "start:website": "dumi dev --port 3001"
   },
   "husky": {
     "hooks": {}

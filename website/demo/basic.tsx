@@ -1,5 +1,5 @@
+import RcGantt from '@hxzn/rc-gantt'
 import dayjs from 'dayjs'
-import RcGantt from 'rc-gantt'
 import React, { useState } from 'react'
 
 interface Data {
@@ -15,8 +15,8 @@ function createData(len: number) {
     result.push({
       id: i,
       name: '一个名称一个名称一个名称一个名称',
-      startDate: dayjs().subtract(-i, 'day').format('YYYY-MM-DD'),
-      endDate: dayjs().add(i, 'day').format('YYYY-MM-DD'),
+      startDate: dayjs('2023-7-21 11:12:43').subtract(-i, 'day').format('YYYY-MM-DD'),
+      endDate: dayjs('2023-10-21 11:13:04').add(i, 'day').format('YYYY-MM-DD'),
     })
   }
   return result

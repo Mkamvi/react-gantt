@@ -1,5 +1,5 @@
 import dayjs from 'dayjs'
-import RcGantt, { Gantt, GanttRef } from 'rc-gantt'
+import RcGantt, { Gantt, GanttRef } from '@hxzn/rc-gantt'
 import React, { useRef, useState } from 'react'
 
 const data = Array.from({ length: 100 }).fill({

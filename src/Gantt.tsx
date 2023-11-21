@@ -66,12 +66,16 @@ export interface GanttProps<RecordType = DefaultRecordType> {
    * 自定义日期筛选维度
    */
   customSights?: Gantt.SightConfig[]
-  locale?: GanttLocale;
+  locale?: GanttLocale
 
   /**
    * 隐藏左侧表格
    */
   hideTable?: boolean
+
+  dateRange?: [Dayjs, Dayjs]
+
+  dateRangeSpace?: number
 }
 export interface GanttRef {
   backToday: () => void
@@ -79,32 +83,32 @@ export interface GanttRef {
 }
 
 export interface GanttLocale {
-  today: string;
-  day: string;
-  days: string;
-  week: string;
-  month: string;
-  quarter: string;
-  halfYear: string;
-  firstHalf: string;
-  secondHalf: string,
+  today: string
+  day: string
+  days: string
+  week: string
+  month: string
+  quarter: string
+  halfYear: string
+  firstHalf: string
+  secondHalf: string
   majorFormat: {
-    day: string;
-    week: string;
-    month: string;
-    quarter: string;
-    halfYear: string;
-  },
+    day: string
+    week: string
+    month: string
+    quarter: string
+    halfYear: string
+  }
   minorFormat: {
-    day: string;
-    week: string;
-    month: string;
-    quarter: string;
-    halfYear: string;
+    day: string
+    week: string
+    month: string
+    quarter: string
+    halfYear: string
   }
 }
 
-export const defaultLocale: GanttLocale = {...zhCN};
+export const defaultLocale: GanttLocale = { ...zhCN }
 
 const GanttComponent = <RecordType extends DefaultRecordType>(props: GanttProps<RecordType>) => {
   const {
@@ -137,11 +141,16 @@ const GanttComponent = <RecordType extends DefaultRecordType>(props: GanttProps<
     renderRightText,
     onExpand,
     customSights = [],
-    locale = {...defaultLocale},
+    locale = { ...defaultLocale },
     hideTable = false,
+    dateRange,
+    dateRangeSpace = 10,
   } = props
 
-  const store = useMemo(() => new GanttStore({ rowHeight, disabled, customSights, locale }), [rowHeight])
+  const store = useMemo(
+    () => new GanttStore({ rowHeight, disabled, customSights, locale, dateRange, dateRangeSpace }),
+    [rowHeight, dateRange, dateRangeSpace]
+  )
   useEffect(() => {
     store.setData(data, startDateKey, endDateKey)
   }, [data, endDateKey, startDateKey, store])

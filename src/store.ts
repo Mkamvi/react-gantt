@@ -63,11 +63,15 @@ class GanttStore {
     disabled = false,
     customSights,
     locale,
+    dateRange,
+    dateRangeSpace,
   }: {
     rowHeight: number
     disabled: boolean
     customSights: Gantt.SightConfig[]
     locale: GanttLocale
+    dateRange?: [Dayjs, Dayjs]
+    dateRangeSpace?: number
   }) {
     this.width = 1320
     this.height = 418
@@ -85,9 +89,15 @@ class GanttStore {
     this.rowHeight = rowHeight
     this.disabled = disabled
     this.locale = locale
+    this.dateRange = dateRange
+    this.dateRangeSpace = dateRangeSpace
   }
 
   locale = { ...defaultLocale }
+
+  dateRange?: [Dayjs, Dayjs]
+
+  dateRangeSpace?: number = 10
 
   _wheelTimer: number | undefined
 
@@ -159,6 +169,13 @@ class GanttStore {
     return dayjs().subtract(10, 'day').toString()
   }
 
+  setStartTranslateX() {
+    const minStart = this.dateRange?.[0] || dayjs(this.data[0]?.startDate)
+    const translateX = minStart.valueOf() / (this.sightConfig.value * 1000) - 140
+
+    this.setTranslateX(translateX)
+  }
+
   setIsRestDay(function_: (date: string) => boolean) {
     this.isRestDay = function_ || isRestDay
   }
@@ -169,6 +186,8 @@ class GanttStore {
     this.endDateKey = endDateKey
     this.originData = data
     this.data = transverseData(data, startDateKey, endDateKey)
+
+    this.setStartTranslateX()
   }
 
   @action
@@ -250,15 +269,17 @@ class GanttStore {
   }
   @action
   setTranslateX(translateX: number, isLeft?: boolean) {
-    const minorList = this.getMinorList()
-    const [uiStart, uiEnd] = [dayjs(minorList.at(0).key), dayjs(minorList.at(-1).key)]
-    const [dataStart, dataEnd] = [dayjs(this.data.at(0).startDate), dayjs(this.data.at(-1).endDate)]
-    if (
-      isLeft !== undefined &&
-      ((isLeft && uiStart.isBefore(dataStart.subtract(10, 'days'))) ||
-        (!isLeft && uiEnd.isAfter(dataEnd.add(10, 'days'))))
-    ) {
-      return
+    if (this.dateRange) {
+      const minorList = this.getMinorList()
+      const [uiStart, uiEnd] = [dayjs(minorList.at(0).key), dayjs(minorList.at(-1).key)]
+      const [dataStart, dataEnd] = this.dateRange
+      if (
+        isLeft !== undefined &&
+        ((isLeft && uiStart.isBefore(dataStart.subtract(this.dateRangeSpace, 'days'))) ||
+          (!isLeft && uiEnd.isAfter(dataEnd.add(this.dateRangeSpace, 'days'))))
+      ) {
+        return
+      }
     }
     this.translateX = Math.max(translateX, 0)
   }
@@ -271,8 +292,9 @@ class GanttStore {
   }
 
   @action scrollToToday() {
-    const translateX = this.todayTranslateX - this.viewWidth / 2
-    this.setTranslateX(translateX)
+    // const translateX = this.todayTranslateX - this.viewWidth / 2
+    // this.setTranslateX(translateX)
+    this.setStartTranslateX()
   }
 
   getTranslateXByDate(date: string) {
