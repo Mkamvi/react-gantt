@@ -191,6 +191,12 @@ class GanttStore {
   }
 
   @action
+  setDateRange(dateRangeSpace: number, dateRange?: [Dayjs, Dayjs]) {
+    this.dateRange = dateRange
+    this.dateRangeSpace = dateRangeSpace
+  }
+
+  @action
   toggleCollapse() {
     if (this.tableWidth > 0) {
       this.tableWidth = 0

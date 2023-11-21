@@ -149,8 +149,13 @@ const GanttComponent = <RecordType extends DefaultRecordType>(props: GanttProps<
 
   const store = useMemo(
     () => new GanttStore({ rowHeight, disabled, customSights, locale, dateRange, dateRangeSpace }),
-    [rowHeight, dateRange, dateRangeSpace]
+    [rowHeight]
   )
+
+  useEffect(() => {
+    store.setDateRange(dateRangeSpace, dateRange)
+  }, [dateRange, dateRangeSpace])
+
   useEffect(() => {
     store.setData(data, startDateKey, endDateKey)
   }, [data, endDateKey, startDateKey, store])
